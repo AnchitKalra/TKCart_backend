@@ -13,29 +13,44 @@ public class UserRepository {
     @PersistenceUnit(unitName = "tkcart")
     private EntityManagerFactory emf;
 
-    public boolean signupser(User newUser) {
+    public User signupser(User newUser) {
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
         try {
-            if(findUser(newUser) == null) {
-            transaction.begin();
-            em.persist(newUser);
-            transaction.commit();
-            return true;
+            User user = findUser(newUser);
+            if(user == null) {
+                transaction.begin();
+                em.merge(newUser);
+                transaction.commit();
+                return newUser;
             }
         }catch(Exception e) {
             transaction.rollback();
         }
-        return false;
+        return null;
     }
 
     public User login(User loginUser) {
-       if(findUserAndPassword(loginUser)) {
-           return loginUser;
-       }
-       return null;
+       User user = findUserAndPassword(loginUser);
+          return user;
+    }
 
+    public User loginWithToken(String accessToken) {
+        EntityManager em = emf.createEntityManager();
+        try{
+            TypedQuery<User> query= em.createQuery("Select u from User u where u.accessToken = :accessToken", User.class);
+            query.setParameter("accessToken", accessToken);
+            User user =  query.getSingleResult();
+            System.out.println("FROM LOGIN WITH TOKEN REPOSITORY");
+            System.out.println(user.getUsername());
+            System.out.println(user.getPassword());
+            return user;
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
     }
 
     public User findUser(User user) {
@@ -56,7 +71,7 @@ public class UserRepository {
         return null;
     }
 
-    public boolean findUserAndPassword(User user) {
+    public User findUserAndPassword(User user) {
         EntityManager em = emf.createEntityManager();
         try {
             String username = user.getUsername();
@@ -64,15 +79,37 @@ public class UserRepository {
             TypedQuery<User> typedQuery = em.createQuery("Select u from User u where u.username = :username and u.password = :password", User.class);
             typedQuery.setParameter("username", username);
             typedQuery.setParameter("password", password);
-             typedQuery.getSingleResult();
-              return true;
+             return typedQuery.getSingleResult();
+
 
         }
         catch (Exception e) {
             System.out.println("FROM LOGIN");
             System.out.println(e);
-            return false;
         }
+        return null;
+    }
+
+    public Boolean saveUserWithToken(User user) {
+        System.out.println(user.getAccessToken());
+        System.out.println(user.getName());
+        System.out.println(user.getUsername());
+        System.out.println(user.getId());
+        System.out.println(user.getPassword());
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try{
+            transaction.begin();
+            em.merge(user);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            transaction.rollback();
+        }
+
+        return false;
     }
 }
 

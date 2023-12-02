@@ -114,7 +114,7 @@ public class CartRepository {
                 c.setTotalValue(c.getTotalValue() + c.getPrice());
                 updateCart(c);
             }
-            else {
+            else  {
                 if(c.getQuantity() == 1) {
                     List<Cart> cartList = new ArrayList<>();
                     cartList.add(c);

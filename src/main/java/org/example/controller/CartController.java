@@ -25,19 +25,18 @@ public class CartController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/cart/addToCart")
     @ResponseBody
-    public Cart saveCart(@RequestBody(required = true) Cart cart) {
+    public Cart saveCart( @RequestBody(required = true) Cart cart) {
         try {
-            User user = cart.getUser();
-            System.out.println("from ADDTOCART");
-            System.out.println(user.getUsername());
-            user = userService.findUser(user);
+            User user = userService.findUser(cart.getUser());
             System.out.println(user.getId());
             System.out.println(cart.getUser().getUsername());
             cart.setUser(user);
             Double totalValue = 0D;
             totalValue += (cart.getPrice() * cart.getQuantity());
             cart.setTotalValue(totalValue);
-                return cartService.updateCart(cart);
+            cart.setImage("");
+            return cartService.updateCart(cart);
+
 
         }catch(Exception e) {
             System.out.println(e);
@@ -48,7 +47,7 @@ public class CartController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/cart/getCart")
     @ResponseBody
-    public List<Cart> getCart(@RequestBody(required = true) User user) {
+    public List<Cart> getCart( @RequestBody(required = true) User user) {
         try {
             System.out.println(user.getUsername());
             user = userService.findUser(user);
@@ -79,27 +78,17 @@ public class CartController {
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/cart/updateQuantity")
     @ResponseBody
-    public boolean updateQuantity(@RequestBody()Object id) {
-        try{
-            System.out.println(id);
-            String split[] = (id.toString()).split("=");
-            String b = "";
-            if(split.length == 2) {
-                b = split[1].split("}")[0];
-                Integer Id = Integer.parseInt(b);
-                boolean flag = cartService.updateQuantity(Id, 1);
-                System.out.println(flag);
-                return flag;
-            }
-            else {
-                b = split[1].split(",")[0];
-                Integer Id = Integer.parseInt(b);
-                System.out.println(Id);
-                boolean flag = cartService.updateQuantity(Id, 0);
-                System.out.println(flag);
-                return flag;
-            }
-
+    public boolean updateQuantity(@RequestBody() Cart cart) {
+        try {
+           Integer id = (cart.getId());
+           if(cart.getPlusMinus() != null) {
+               String plusMinus = cart.getPlusMinus();
+               System.out.println(plusMinus);
+               return cartService.updateQuantity(id, 0);
+           }
+          else{
+              return cartService.updateQuantity(id, 1);
+           }
         }
         catch (Exception e) {
             System.out.println(e);

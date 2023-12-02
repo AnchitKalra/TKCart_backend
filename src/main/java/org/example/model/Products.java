@@ -1,23 +1,23 @@
 package org.example.model;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.sql.Blob;
 
 @Entity
-@Table(name = "cart")
-public class Cart {
+@Table(name = "products")
+public class Products {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    @JsonProperty("id")
     private Integer id;
 
-    @NotNull
+
     @Column(name = "title")
+    @Size(max = 1000)
     @JsonProperty("title")
     private String title;
 
@@ -25,10 +25,9 @@ public class Cart {
     @JsonProperty("price")
     private Double price;
 
-
     @Column(name = "description")
+    @Size(max = 4000)
     @JsonProperty("description")
-    @Size(max = 3000)
     private String description;
 
     @Column(name = "category")
@@ -47,25 +46,19 @@ public class Cart {
     @JsonProperty("count")
     private Integer count;
 
-    @Column(name = "quantity")
-    @JsonProperty("quantity")
-    private Integer quantity;
+
+    @Column(name = "imageT", columnDefinition = "TEXT")
+    @JsonProperty("imageT")
+    private String images;
 
 
-    @Column(name = "totalValue")
-    @JsonProperty("totalValue")
-    private Double totalValue;
+    public String getImages() {
+        return images;
+    }
 
-    @Column(name = "plusMinus")
-    @JsonProperty("plusMinus")
-    private String plusMinus;
-
-
-
-    @OneToOne
-    @JoinColumn(name = "userId")
-    @JsonProperty("userId")
-    private User user;
+    public void setImages(String images) {
+        this.images = images;
+    }
 
     public Integer getId() {
         return id;
@@ -73,14 +66,6 @@ public class Cart {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getTitle() {
@@ -138,28 +123,5 @@ public class Cart {
     public void setCount(Integer count) {
         this.count = count;
     }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getTotalValue() {
-        return totalValue;
-    }
-
-    public void setTotalValue(Double totalValue) {
-        this.totalValue = totalValue;
-    }
-
-    public String getPlusMinus() {
-        return plusMinus;
-    }
-
-    public void setPlusMinus(String plusMinus) {
-        this.plusMinus = plusMinus;
-    }
 }
+

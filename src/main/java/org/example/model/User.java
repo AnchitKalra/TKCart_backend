@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -17,19 +18,28 @@ public class User {
     private Integer id;
     @Column(name = "full_name")
     @JsonProperty("full_name")
-    @NotNull
     private String name;
 
     @Column(name = "username")
     @JsonProperty("username")
-    @NotNull
     private String username;
 
     @Column(name = "password")
     @JsonProperty("password")
-    @NotNull
     private String password;
 
+    @Column(name = "accessToken")
+    @Size(max = 5000)
+    private String accessToken;
+
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessTokens) {
+        this.accessToken = accessTokens;
+    }
 
     public Integer getId() {
         return id;

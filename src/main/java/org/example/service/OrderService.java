@@ -13,7 +13,7 @@ public class OrderService {
 
     @Autowired
     OrderRepository orderRepository;
-    public boolean createOrder(Order order) {
+    public Order createOrder(Order order) {
         return orderRepository.createOrder(order);
     }
 }

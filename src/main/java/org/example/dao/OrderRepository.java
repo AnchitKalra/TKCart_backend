@@ -13,7 +13,7 @@ public class OrderRepository {
 
     @PersistenceUnit(unitName = "tkcart")
     private EntityManagerFactory emf;
-public boolean createOrder(Order order) {
+public Order createOrder(Order order) {
 
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
@@ -21,13 +21,24 @@ public boolean createOrder(Order order) {
         transaction.begin();
         em.merge(order);
         transaction.commit();
-        return true;
+
     }
     catch (Exception e) {
         System.out.println(e);
         transaction.rollback();
     }
-    return false;
+
+    User user = order.getUser();
+    List<Order> orders = getOrder(user);
+    Order order1 = null;
+    int max = 0;
+    for (Order o : orders) {
+        if(o.getId() > max) {
+            max = o.getId();
+            order1 = o;
+        }
+    }
+    return order1;
 }
 
 public List<Order> getOrder(User user) {
@@ -42,5 +53,6 @@ public List<Order> getOrder(User user) {
     }
     return null;
 }
+
 
 }
