@@ -32,6 +32,18 @@ public class User {
     @Size(max = 5000)
     private String accessToken;
 
+    @Column(name = "googleimage")
+    @JsonProperty("image")
+    private String googleImage;
+
+
+    public String getGoogleImage() {
+        return googleImage;
+    }
+
+    public void setGoogleImage(String googleImage) {
+        this.googleImage = googleImage;
+    }
 
     public String getAccessToken() {
         return accessToken;

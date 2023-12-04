@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.model.User;
 import org.example.service.ProductsService;
+import org.example.service.ProfileService;
 import org.example.service.UserService;
 import org.example.utils.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +29,23 @@ public class UserController {
     @Autowired
     ProductsService productsService;
 
+    @Autowired
+    ProfileService profileService;
+
     @RequestMapping(method = RequestMethod.POST, value = "/user/signup")
     @ResponseBody
-    public ResponseEntity<User> signup( @RequestBody(required = true) User user )
+    public ResponseEntity<User> signup(@RequestBody(required = true) User user)
 
     {
         try {
             User reUser = userService.signup(user);
-            if (reUser.getId() != null) {
-                return new ResponseEntity<>(reUser, HttpStatus.CREATED);
-            }
+                return new ResponseEntity<>(reUser, HttpStatus.OK);
         }catch (Exception e) {
             System.out.println(e);
 
+
         }
-        return new ResponseEntity<>(null);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/user/login")
@@ -74,7 +77,7 @@ public class UserController {
     catch (Exception e) {
             System.out.println(e);
         }
-        return null;
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
 
@@ -92,7 +95,7 @@ public class UserController {
         catch (Exception e) {
             System.out.println(e);
         }
-        return null;
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
     @RequestMapping(value = "/user/logout", method = RequestMethod.GET)
     @ResponseBody
