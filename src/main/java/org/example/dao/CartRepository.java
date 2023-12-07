@@ -137,4 +137,32 @@ public class CartRepository {
         return false;
     }
 
+
+    public List<Cart> getCartList(List<Order> orderList, User user) {
+       EntityManager entityManager = entityManagerFactory.createEntityManager();
+       try{
+           List<List<Cart>> outputList = new ArrayList<>();
+               TypedQuery<Cart> typedQuery = entityManager.createQuery("select c from Cart c where c.user = :user", Cart.class);
+               typedQuery.setParameter("user", user);
+               List<Cart> c = typedQuery.getResultList();
+               List<Cart> result = new ArrayList<>();
+               for(Order o : orderList) {
+                   List<Cart> c1 = o.getCartList();
+                   for (Cart c2 : c1) {
+                       for (Cart c3 : c) {
+                           if (c2.getId().equals(c3.getId())) {
+                               result.add(c3);
+                           }
+                       }
+
+                   }
+               }
+               return result;
+
+       }catch (Exception e) {
+           System.out.println(e);
+       }
+       return null;
+    }
+
 }

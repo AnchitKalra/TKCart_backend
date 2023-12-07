@@ -54,5 +54,31 @@ public List<Order> getOrder(User user) {
     return null;
 }
 
+public List<Order> getOrdersList(User user) {
+    EntityManager entityManager = emf.createEntityManager();
+    try{
+      TypedQuery<Order> typedQuery = entityManager.createQuery("Select o from Order o where o.user = :userId", Order.class);
+      typedQuery.setParameter("userId", user);
+      return typedQuery.getResultList();
+    }
+    catch (Exception e) {
+        System.out.println(e);
+    }
+    return null;
+}
+
+public Order getLastOrder(User user) {
+    EntityManager entityManager = emf.createEntityManager();
+    try {
+        TypedQuery<Order> typedQuery = entityManager.createQuery("select  o   from Order o where o.user = :user", Order.class);
+        typedQuery.setParameter("user", user);
+        List<Order> orders = typedQuery.getResultList();
+        return orders.get(orders.size() - 1);
+    }catch (Exception e) {
+        System.out.println(e);
+    }
+    return null;
+}
+
 
 }

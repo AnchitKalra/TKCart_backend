@@ -25,7 +25,7 @@ public class UserRepository {
             }
             else {
                 transaction.begin();
-                em.merge(newUser);
+                em.persist(newUser);
                 transaction.commit();
                 return newUser;
             }
@@ -95,11 +95,6 @@ public class UserRepository {
     }
 
     public Boolean saveUserWithToken(User user) {
-        System.out.println(user.getAccessToken());
-        System.out.println(user.getName());
-        System.out.println(user.getUsername());
-        System.out.println(user.getId());
-        System.out.println(user.getPassword());
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try{

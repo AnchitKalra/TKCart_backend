@@ -1,9 +1,11 @@
 package org.example.controller;
 
 import org.example.model.User;
+import org.example.model.UserProfile;
 import org.example.service.ProductsService;
 import org.example.service.ProfileService;
 import org.example.service.UserService;
+import org.example.utility.Utility;
 import org.example.utils.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 
 import java.util.UUID;
@@ -38,7 +43,16 @@ public class UserController {
 
     {
         try {
+
             User reUser = userService.signup(user);
+                UserProfile userProfile = new UserProfile();
+                String file = "src/main/resources/dummy.png";
+                byte bytes[] = Files.readAllBytes(Paths.get(file));
+                String image = Utility.convertUploadedFileToBase64(bytes);
+                userProfile.setImage(image);
+                userProfile.setUser(reUser);
+                userProfile.setName(reUser.getName());
+                profileService.saveProfile(userProfile);
                 return new ResponseEntity<>(reUser, HttpStatus.OK);
         }catch (Exception e) {
             System.out.println(e);
@@ -68,7 +82,6 @@ public class UserController {
             else{
                 System.out.println("**************NO****************************");
             }
-
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("access-token", token);
             httpHeaders.add("Access-Control-Expose-Headers", "*");

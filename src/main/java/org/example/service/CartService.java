@@ -3,6 +3,7 @@ package org.example.service;
 
 import org.example.dao.CartRepository;
 import org.example.model.Cart;
+import org.example.model.Order;
 import org.example.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,10 @@ public class CartService {
 
     public boolean updateQuantity(Integer id, Integer plusMinus) {
         return cartRepository.updateQuantity(id, plusMinus);
+    }
+
+    public List<Cart> getCartList(List<Order> orderList, User user)  {
+        return cartRepository.getCartList(orderList, user);
     }
 
 
