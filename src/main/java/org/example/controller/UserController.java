@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 
@@ -49,7 +48,8 @@ public class UserController {
                 String file = "src/main/resources/dummy.png";
                 byte bytes[] = Files.readAllBytes(Paths.get(file));
                 String image = Utility.convertUploadedFileToBase64(bytes);
-                userProfile.setImage(image);
+                String img = "data:image/png;base64," + image;
+                userProfile.setImage(img);
                 userProfile.setUser(reUser);
                 userProfile.setName(reUser.getName());
                 profileService.saveProfile(userProfile);

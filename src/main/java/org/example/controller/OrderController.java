@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -43,6 +44,7 @@ public class OrderController {
             order.setOrderId(randomString);
             User user = userService.findUser(order.getUser());
             order.setUser(user);
+            order.setDate(new Date());
             Order order1 = orderService.createOrder(order);
             return new ResponseEntity<Order>(order1, HttpStatus.OK);
         }catch (Exception e) {
